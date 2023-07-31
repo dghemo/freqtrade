@@ -136,6 +136,7 @@ class BBRSITV(IStrategy):
                 # disp_down = basis - ((upper - lower) * for_sigma) // Минимально-допустимый порог в области мувинга, который должен преодолеть RSI (снизу)
                 # dataframe[f'disp_down_{for_ma}'] = dataframe[f'basis_{for_ma}'] - ((dataframe[f'upper_{for_ma}'] - dataframe[f'lower_{for_ma}']) * for_sigma)
                 # color_rsi = current_rsi >= disp_up ? lime : current_rsi <= disp_down ? red : #ffea00 // Текущий цвет RSI, в зависимости от его местоположения внутри BB
+            dataframe = dataframe.copy()
         else:
             dataframe[f'basis_{self.for_ma_length.value}'] = ta.EMA(dataframe['rsi'], self.for_ma_length.value)
             dataframe[f'basis_{self.for_ma_length_sell.value}'] = ta.EMA(dataframe['rsi'], self.for_ma_length_sell.value)
