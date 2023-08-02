@@ -58,20 +58,20 @@ class BBRSITV(IStrategy):
     startup_candle_count = 30
 
     protections = [
-        # 	{
-        # 		"method": "StoplossGuard",
-        # 		"lookback_period_candles": 12,
-        # 		"trade_limit": 1,
-        # 		"stop_duration_candles": 6,
-        # 		"only_per_pair": True
-        # 	},
-        # 	{
-        # 		"method": "StoplossGuard",
-        # 		"lookback_period_candles": 12,
-        # 		"trade_limit": 2,
-        # 		"stop_duration_candles": 6,
-        # 		"only_per_pair": False
-        # 	},
+        {
+            "method": "StoplossGuard",
+            "lookback_period_candles": 12,
+            "trade_limit": 1,
+            "stop_duration_candles": 6,
+            "only_per_pair": True
+        },
+        {
+            "method": "StoplossGuard",
+            "lookback_period_candles": 12,
+            "trade_limit": 2,
+            "stop_duration_candles": 6,
+            "only_per_pair": False
+        },
         {
             "method": "LowProfitPairs",
             "lookback_period_candles": 60,
