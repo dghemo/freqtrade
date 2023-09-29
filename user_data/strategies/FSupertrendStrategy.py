@@ -83,6 +83,16 @@ class FSupertrendStrategy(IStrategy):
     # sell_p2 = IntParameter(9, 15, default=11)
     # sell_p3 = IntParameter(9, 15, default=12)
 
+    plot_config = {
+        'main_plot': {
+            'supertrend1': {},
+            'supertrend2': {},
+            'supertrend3': {},
+            'sell_ema_200': {'color': 'blue'},
+            'ema21': {'color': 'white'},
+        }
+    }
+
     def populate_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         # for multiplier in self.buy_m1.range:
         #     for period in self.buy_p1.range:
