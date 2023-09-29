@@ -62,14 +62,14 @@ class BBRSITVX(IStrategy):
             "method": "StoplossGuard",
             "lookback_period_candles": 12,
             "trade_limit": 1,
-            "stop_duration_candles": 6,
+            "stop_duration_candles": 24,
             "only_per_pair": True
         },
         {
             "method": "StoplossGuard",
             "lookback_period_candles": 12,
             "trade_limit": 2,
-            "stop_duration_candles": 6,
+            "stop_duration_candles": 24,
             "only_per_pair": False
         },
         {

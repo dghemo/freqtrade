@@ -21,8 +21,8 @@
         "ccxt_config": {},
         "ccxt_async_config": {},
         "pair_whitelist": [
-            "1INCH/USDT:USDT",
-            "ALGO/USDT:USDT"
+            "DYDX/USDT:USDT",
+            "CFX/USDT:USDT"
         ],
         "pair_blacklist": []
     },

@@ -18,6 +18,7 @@ def EWO(dataframe, ema_length=5, ema2_length=35):
 
 class BBRSITV(IStrategy):
     INTERFACE_VERSION = 2
+    timeframe = '5m'
 
     # Buy hyperspace params:
     buy_params = {
@@ -96,7 +97,6 @@ class BBRSITV(IStrategy):
     for_ma_length_sell = IntParameter(5, 80, default=sell_params['for_ma_length_sell'], space='sell', optimize=True)
 
     # Optimal timeframe for the strategy
-    timeframe = '5m'
 
     # Protection
     fast_ewo = 50

@@ -139,14 +139,14 @@ class SampleStrategy(IStrategy):
 
         # ADX
         dataframe['adx'] = ta.ADX(dataframe)
+        dataframe['plus_di'] = ta.PLUS_DI(dataframe)
+        dataframe['minus_di'] = ta.MINUS_DI(dataframe)
 
         # # Plus Directional Indicator / Movement
         # dataframe['plus_dm'] = ta.PLUS_DM(dataframe)
-        # dataframe['plus_di'] = ta.PLUS_DI(dataframe)
 
         # # Minus Directional Indicator / Movement
         # dataframe['minus_dm'] = ta.MINUS_DM(dataframe)
-        # dataframe['minus_di'] = ta.MINUS_DI(dataframe)
 
         # # Aroon, Aroon Oscillator
         # aroon = ta.AROON(dataframe)
