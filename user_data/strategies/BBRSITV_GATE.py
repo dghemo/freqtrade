@@ -16,7 +16,7 @@ def EWO(dataframe, ema_length=5, ema2_length=35):
     return emadif
 
 
-class BBRSITV(IStrategy):
+class BBRSITV_GATE(IStrategy):
     INTERFACE_VERSION = 2
     timeframe = '5m'
 
@@ -37,9 +37,9 @@ class BBRSITV(IStrategy):
     # ROI table:  # value loaded from strategy
     minimal_roi = {
         '0': 0.087,
-        '23': 0.025,
-        '56': 0.011,
-        '164': 0}
+        '25': 0.025,
+        '55': 0.011,
+        '165': 0}
 
     # Stoploss:
     stoploss = -0.28  # value loaded from strategy
