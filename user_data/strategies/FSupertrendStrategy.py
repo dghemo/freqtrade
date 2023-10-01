@@ -15,6 +15,7 @@ import logging
 from numpy.lib import math
 from freqtrade.strategy import IStrategy, IntParameter
 from pandas import DataFrame
+import pandas_ta as ta
 import numpy as np
 
 import talib.abstract as ta
@@ -50,6 +51,7 @@ class FSupertrendStrategy(IStrategy):
 
     # ROI table:
     minimal_roi = {"0": 0.1, "30": 0.75, "60": 0.05, "120": 0.025}
+    # minimal_roi = {"0": 0.01, "30": 0.075, "60": 0.005, "120": 0.0025}  #5m
     # minimal_roi = {"0": 1}
 
     # Stoploss:
@@ -130,9 +132,13 @@ class FSupertrendStrategy(IStrategy):
         #             dataframe, multiplier, period
         #         )["STX"]
 
-        dataframe["supertrend1"] = self.supertrend(dataframe, 1, 10)["STX"]
-        dataframe["supertrend2"] = self.supertrend(dataframe, 2, 11)["STX"]
-        dataframe["supertrend3"] = self.supertrend(dataframe, 3, 12)["STX"]
+        # dataframe["supertrend1"] = self.supertrend(dataframe, 1, 10)["STX"]
+        # dataframe["supertrend2"] = self.supertrend(dataframe, 2, 11)["STX"]
+        # dataframe["supertrend3"] = self.supertrend(dataframe, 3, 12)["STX"]
+
+        dataframe.ta.supertrend(period=10, multiplier=1, append=True)
+        dataframe.ta.supertrend(period=11, multiplier=2, append=True)
+        dataframe.ta.supertrend(period=12, multiplier=3, append=True)
 
         for period in self.buy_ema.range:
             dataframe[f"sell_ema_{period}"] = ta.EMA(dataframe, timeperiod=period)
@@ -153,9 +159,9 @@ class FSupertrendStrategy(IStrategy):
             (dataframe[f"sell_ema_{self.buy_ema.value}"] < dataframe["close"])
             & (dataframe[f"sell_ema_{self.buy_ema.value}"].shift(1) < dataframe["close"].shift(1))
             & (dataframe["ema21"] < dataframe["close"])
-            & (dataframe["supertrend1"] == "up")
-            & (dataframe["supertrend2"] == "up")
-            & (dataframe["supertrend3"] == "up")
+            & (dataframe["SUPERTd_7_1.0"] == 1)
+            & (dataframe["SUPERTd_7_2.0"] == 1)
+            & (dataframe["SUPERTd_7_3.0"] == 1)
             & (dataframe["volume"] > 0),
             "enter_long",
         ] = 1
@@ -164,9 +170,9 @@ class FSupertrendStrategy(IStrategy):
             (dataframe[f"sell_ema_{self.sell_ema.value}"] > dataframe["close"])
             & (dataframe[f"sell_ema_{self.buy_ema.value}"].shift(1) > dataframe["close"].shift(1))
             & (dataframe["ema21"] > dataframe["close"])
-            & (dataframe[f"supertrend1"] == "down")
-            & (dataframe[f"supertrend2"] == "down")
-            & (dataframe[f"supertrend3"] == "down")
+            & (dataframe["SUPERTd_7_1.0"] == -1)
+            & (dataframe["SUPERTd_7_2.0"] == -1)
+            & (dataframe["SUPERTd_7_3.0"] == -1)
             & (dataframe["volume"] > 0),
             "enter_short",
         ] = 1
