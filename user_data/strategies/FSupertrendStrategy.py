@@ -87,9 +87,9 @@ class FSupertrendStrategy(IStrategy):
 
     plot_config = {
         'main_plot': {
-            'SUPERTd_10_1.0': {},
-            'SUPERTd_11_2.0': {},
-            'SUPERTd_12_3.0': {},
+            'SUPERT_10_1.0': {},
+            'SUPERT_11_2.0': {},
+            'SUPERT_12_3.0': {},
             'sell_ema_200': {'color': 'blue'},
             'ema21': {'color': 'white'},
 
