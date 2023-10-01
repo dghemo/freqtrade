@@ -51,7 +51,7 @@ class FSupertrendStrategy(IStrategy):
 
     # ROI table:
     # minimal_roi = {"0": 0.1, "30": 0.75, "60": 0.05, "120": 0.025}
-    minimal_roi = {"0": 0.02, "30": 0.15, "60": 0.01, "120": 0.005}  #5m
+    minimal_roi = {"0": 0.01, "30": 0.075, "60": 0.005, "120": 0.025}  #5m
     # minimal_roi = {"0": 1}
 
     # Stoploss:
@@ -87,9 +87,9 @@ class FSupertrendStrategy(IStrategy):
 
     plot_config = {
         'main_plot': {
-            'supertrend1': {},
-            'supertrend2': {},
-            'supertrend3': {},
+            'SUPERTd_10_1.0': {},
+            'SUPERTd_11_2.0': {},
+            'SUPERTd_12_3.0': {},
             'sell_ema_200': {'color': 'blue'},
             'ema21': {'color': 'white'},
         }
