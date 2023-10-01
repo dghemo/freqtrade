@@ -62,14 +62,14 @@ class BBRSITV_BIN(IStrategy):
             "method": "StoplossGuard",
             "lookback_period_candles": 12,
             "trade_limit": 1,
-            "stop_duration_candles": 24,
+            "stop_duration_candles": 6,
             "only_per_pair": True
         },
         {
             "method": "StoplossGuard",
             "lookback_period_candles": 12,
             "trade_limit": 2,
-            "stop_duration_candles": 24,
+            "stop_duration_candles": 6,
             "only_per_pair": False
         },
         {
@@ -211,7 +211,7 @@ class BBRSITV_BIN(IStrategy):
         return dataframe
 
 
-class BBRSITV1(BBRSITV):
+class BBRSITV1(BBRSITV_BIN):
     """
     2021-07-01 00:00:00 -> 2021-09-28 00:00:00 | Max open trades : 4
 ============================================================================= STRATEGY SUMMARY =============================================================================
@@ -288,7 +288,7 @@ class BBRSITV1_SL06(BBRSITV1):
     stoploss = -0.06  # value loaded from strategy
 
 
-class BBRSITV2(BBRSITV):
+class BBRSITV2(BBRSITV_BIN):
     """
     2021-07-01 00:00:00 -> 2021-09-28 00:00:00 | Max open trades : 4
 ============================================================================= STRATEGY SUMMARY =============================================================================
@@ -328,7 +328,7 @@ class BBRSITV2(BBRSITV):
     trailing_only_offset_is_reached = True  # value loaded from strategy
 
 
-class BBRSITV3(BBRSITV):
+class BBRSITV3(BBRSITV_BIN):
     """
 
     2021-07-01 00:00:00 -> 2021-09-28 00:00:00 | Max open trades : 4

@@ -92,6 +92,7 @@ class FSupertrendStrategy(IStrategy):
             'SUPERTd_12_3.0': {},
             'sell_ema_200': {'color': 'blue'},
             'ema21': {'color': 'white'},
+
         }
     }
 
