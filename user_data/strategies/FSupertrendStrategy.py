@@ -51,7 +51,7 @@ class FSupertrendStrategy(IStrategy):
 
     # ROI table:
     # minimal_roi = {"0": 0.1, "30": 0.75, "60": 0.05, "120": 0.025}
-    minimal_roi = {"0": 0.01, "30": 0.075, "60": 0.005, "120": 0.025}  #5m
+    minimal_roi = {"0": 0.01, "30": 0.075, "60": 0.005, "120": 0.03}  #5m
     # minimal_roi = {"0": 1}
 
     # Stoploss:
