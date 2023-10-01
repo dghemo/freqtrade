@@ -50,8 +50,8 @@ class FSupertrendStrategy(IStrategy):
     }
 
     # ROI table:
-    minimal_roi = {"0": 0.1, "30": 0.75, "60": 0.05, "120": 0.025}
-    # minimal_roi = {"0": 0.01, "30": 0.075, "60": 0.005, "120": 0.0025}  #5m
+    # minimal_roi = {"0": 0.1, "30": 0.75, "60": 0.05, "120": 0.025}
+    minimal_roi = {"0": 0.02, "30": 0.15, "60": 0.01, "120": 0.005}  #5m
     # minimal_roi = {"0": 1}
 
     # Stoploss:
@@ -136,9 +136,9 @@ class FSupertrendStrategy(IStrategy):
         # dataframe["supertrend2"] = self.supertrend(dataframe, 2, 11)["STX"]
         # dataframe["supertrend3"] = self.supertrend(dataframe, 3, 12)["STX"]
 
-        dataframe.ta.supertrend(period=10, multiplier=1, append=True)
-        dataframe.ta.supertrend(period=11, multiplier=2, append=True)
-        dataframe.ta.supertrend(period=12, multiplier=3, append=True)
+        dataframe.ta.supertrend(length=10, multiplier=1, append=True)
+        dataframe.ta.supertrend(length=11, multiplier=2, append=True)
+        dataframe.ta.supertrend(length=12, multiplier=3, append=True)
 
         for period in self.buy_ema.range:
             dataframe[f"sell_ema_{period}"] = ta.EMA(dataframe, timeperiod=period)
@@ -159,9 +159,9 @@ class FSupertrendStrategy(IStrategy):
             (dataframe[f"sell_ema_{self.buy_ema.value}"] < dataframe["close"])
             & (dataframe[f"sell_ema_{self.buy_ema.value}"].shift(1) < dataframe["close"].shift(1))
             & (dataframe["ema21"] < dataframe["close"])
-            & (dataframe["SUPERTd_7_1.0"] == 1)
-            & (dataframe["SUPERTd_7_2.0"] == 1)
-            & (dataframe["SUPERTd_7_3.0"] == 1)
+            & (dataframe["SUPERTd_10_1.0"] == 1)
+            & (dataframe["SUPERTd_11_2.0"] == 1)
+            & (dataframe["SUPERTd_12_3.0"] == 1)
             & (dataframe["volume"] > 0),
             "enter_long",
         ] = 1
@@ -170,9 +170,9 @@ class FSupertrendStrategy(IStrategy):
             (dataframe[f"sell_ema_{self.sell_ema.value}"] > dataframe["close"])
             & (dataframe[f"sell_ema_{self.buy_ema.value}"].shift(1) > dataframe["close"].shift(1))
             & (dataframe["ema21"] > dataframe["close"])
-            & (dataframe["SUPERTd_7_1.0"] == -1)
-            & (dataframe["SUPERTd_7_2.0"] == -1)
-            & (dataframe["SUPERTd_7_3.0"] == -1)
+            & (dataframe["SUPERTd_10_1.0"] == -1)
+            & (dataframe["SUPERTd_11_2.0"] == -1)
+            & (dataframe["SUPERTd_12_3.0"] == -1)
             & (dataframe["volume"] > 0),
             "enter_short",
         ] = 1
