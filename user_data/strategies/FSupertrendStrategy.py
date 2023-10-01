@@ -64,7 +64,7 @@ class FSupertrendStrategy(IStrategy):
     trailing_stop_positive_offset = 0.1
     trailing_only_offset_is_reached = False
 
-    timeframe = "1h"
+    timeframe = "5m"
 
     startup_candle_count = 18
 
@@ -87,9 +87,9 @@ class FSupertrendStrategy(IStrategy):
 
     plot_config = {
         'main_plot': {
-            'supertrend1': {},
-            'supertrend2': {},
-            'supertrend3': {},
+            'supertrend1val': {'color': 'green'},
+            'supertrend2val': {'color': 'green'},
+            'supertrend3val': {'color': 'green'},
             'sell_ema_200': {'color': 'blue'},
             'ema21': {'color': 'white'},
         }
@@ -139,6 +139,10 @@ class FSupertrendStrategy(IStrategy):
         dataframe.ta.supertrend(length=10, multiplier=1, append=True)
         dataframe.ta.supertrend(length=11, multiplier=2, append=True)
         dataframe.ta.supertrend(length=12, multiplier=3, append=True)
+
+        # dataframe["supertrend1val"] = self.supertrend(dataframe, 1, 10)["ST"]
+        # dataframe["supertrend2val"] = self.supertrend(dataframe, 2, 11)["ST"]
+        # dataframe["supertrend3val"] = self.supertrend(dataframe, 3, 12)["ST"]
 
         for period in self.buy_ema.range:
             dataframe[f"sell_ema_{period}"] = ta.EMA(dataframe, timeperiod=period)
