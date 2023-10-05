@@ -29,7 +29,7 @@ class FSupertrendStrategy(IStrategy):
     INTERFACE_VERSION: int = 3
     # Buy hyperspace params:
     buy_params = {
-        "buy_ema": 200,
+        # "buy_ema": 200,
         # "buy_m1": 1,
         # "buy_m2": 2,
         # "buy_m3": 3,
@@ -40,7 +40,7 @@ class FSupertrendStrategy(IStrategy):
 
     # Sell hyperspace params:
     sell_params = {
-        "sell_ema": 200,
+        # "sell_ema": 200,
         # "sell_m1": 1,
         # "sell_m2": 2,
         # "sell_m3": 3,
@@ -51,7 +51,7 @@ class FSupertrendStrategy(IStrategy):
 
     # ROI table:
     # minimal_roi = {"0": 0.1, "30": 0.75, "60": 0.05, "120": 0.025}
-    minimal_roi = {"0": 0.01, "30": 0.075, "60": 0.005, "120": 0.03}  #5m
+    minimal_roi = {"0": 0.01, "30": 0.075, "60": 0.005, "120": 0.03}
     # minimal_roi = {"0": 1}
 
     # Stoploss:
@@ -59,16 +59,17 @@ class FSupertrendStrategy(IStrategy):
     can_short = True
 
     # Trailing stop:
+    use_exit_signal = True
     trailing_stop = True
     trailing_stop_positive = 0.05
     trailing_stop_positive_offset = 0.1
     trailing_only_offset_is_reached = False
 
-    timeframe = "5m"
+    timeframe = "1h"
 
-    startup_candle_count = 18
+    startup_candle_count = 200
 
-    buy_ema = IntParameter(190, 210, default=200, space="buy")
+    # buy_ema = IntParameter(190, 210, default=200, space="buy")
     # buy_m1 = IntParameter(1, 4, default=1)
     # buy_m2 = IntParameter(1, 4, default=2)
     # buy_m3 = IntParameter(1, 4, default=3)
@@ -76,7 +77,7 @@ class FSupertrendStrategy(IStrategy):
     # buy_p2 = IntParameter(9, 15, default=11)
     # buy_p3 = IntParameter(9, 15, default=12)
 
-    sell_ema = IntParameter(190, 210, default=200, space="sell")
+    # sell_ema = IntParameter(190, 210, default=200, space="sell")
 
     # sell_m1 = IntParameter(1, 4, default=1)
     # sell_m2 = IntParameter(1, 4, default=2)
@@ -91,95 +92,96 @@ class FSupertrendStrategy(IStrategy):
             'SUPERT_11_2.0': {'color': 'cyan'},
             'SUPERT_12_3.0': {'color': 'cyan'},
             'sell_ema_200': {'color': 'blue'},
-            'ema21': {'color': 'white'},
+            'emaLite': {'color': 'white'},
 
         }
     }
 
     def populate_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
-        # for multiplier in self.buy_m1.range:
-        #     for period in self.buy_p1.range:
-        #         dataframe[f"supertrend_1_buy_{multiplier}_{period}"] = self.supertrend(
-        #             dataframe, multiplier, period
-        #         )["STX"]
-        #
-        # for multiplier in self.buy_m2.range:
-        #     for period in self.buy_p2.range:
-        #         dataframe[f"supertrend_2_buy_{multiplier}_{period}"] = self.supertrend(
-        #             dataframe, multiplier, period
-        #         )["STX"]
-        #
-        # for multiplier in self.buy_m3.range:
-        #     for period in self.buy_p3.range:
-        #         dataframe[f"supertrend_3_buy_{multiplier}_{period}"] = self.supertrend(
-        #             dataframe, multiplier, period
-        #         )["STX"]
-        #
-        # for multiplier in self.sell_m1.range:
-        #     for period in self.sell_p1.range:
-        #         dataframe[f"supertrend_1_sell_{multiplier}_{period}"] = self.supertrend(
-        #             dataframe, multiplier, period
-        #         )["STX"]
-        #
-        # for multiplier in self.sell_m2.range:
-        #     for period in self.sell_p2.range:
-        #         dataframe[f"supertrend_2_sell_{multiplier}_{period}"] = self.supertrend(
-        #             dataframe, multiplier, period
-        #         )["STX"]
-        #
-        # for multiplier in self.sell_m3.range:
-        #     for period in self.sell_p3.range:
-        #         dataframe[f"supertrend_3_sell_{multiplier}_{period}"] = self.supertrend(
-        #             dataframe, multiplier, period
-        #         )["STX"]
-
-        # dataframe["supertrend1"] = self.supertrend(dataframe, 1, 10)["STX"]
-        # dataframe["supertrend2"] = self.supertrend(dataframe, 2, 11)["STX"]
-        # dataframe["supertrend3"] = self.supertrend(dataframe, 3, 12)["STX"]
 
         dataframe.ta.supertrend(length=10, multiplier=1, append=True)
         dataframe.ta.supertrend(length=11, multiplier=2, append=True)
         dataframe.ta.supertrend(length=12, multiplier=3, append=True)
 
-        # dataframe["supertrend1val"] = self.supertrend(dataframe, 1, 10)["ST"]
-        # dataframe["supertrend2val"] = self.supertrend(dataframe, 2, 11)["ST"]
-        # dataframe["supertrend3val"] = self.supertrend(dataframe, 3, 12)["ST"]
-
-        for period in self.buy_ema.range:
-            dataframe[f"sell_ema_{period}"] = ta.EMA(dataframe, timeperiod=period)
-
-        for period in self.sell_ema.range:
-            dataframe[f"sell_ema_{period}"] = ta.EMA(dataframe, timeperiod=period)
+        dataframe["emaBig"] = ta.EMA(dataframe, timeperiod=200)
+        dataframe["emaLite"] = ta.EMA(dataframe, timeperiod=28)
 
         dataframe["adx"] = ta.ADX(dataframe)
         dataframe["plus_di"] = ta.PLUS_DI(dataframe)
         dataframe["minus_di"] = ta.MINUS_DI(dataframe)
-        dataframe["ema21"] = ta.EMA(dataframe, timeperiod=28)
 
         return dataframe
 
     def populate_entry_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
 
+        overemaBig = (dataframe["close"] > dataframe["emaBig"])
+        overemaBigShifted = (dataframe["close"].shift(1) > dataframe["emaBig"].shift(1))
+        ruleemaLiteLong = (dataframe["close"] < dataframe["emaLite"])
+        volumeOn = (dataframe["volume"] > 0)
+        allSuperGreen = ((dataframe["SUPERTd_10_1.0"] == 1) & (dataframe["SUPERTd_11_2.0"] == 1) & (dataframe["SUPERTd_12_3.0"] == 1))
+        notAllShiftedSuperGreen = ((dataframe["SUPERTd_10_1.0"].shift(1) == -1) | (dataframe["SUPERTd_11_2.0"].shift(1) == -1) | (dataframe["SUPERTd_12_3.0"].shift(1) == -1))
         dataframe.loc[
-            (dataframe[f"sell_ema_{self.buy_ema.value}"] < dataframe["close"])
-            & (dataframe[f"sell_ema_{self.buy_ema.value}"].shift(1) < dataframe["close"].shift(1))
-            & (dataframe["ema21"] < dataframe["close"])
-            & (dataframe["SUPERTd_10_1.0"] == 1)
-            & (dataframe["SUPERTd_11_2.0"] == 1)
-            & (dataframe["SUPERTd_12_3.0"] == 1)
-            & (dataframe["volume"] > 0),
+            (
+                    True
+                    & overemaBig
+                    & overemaBigShifted
+                    & ruleemaLiteLong
+                    & allSuperGreen
+                    # & notAllShiftedSuperGreen
+                    & volumeOn
+            )
+            # |
+            # (
+            #         True
+            #         & (qtpylib.crossed_above(dataframe["close"], dataframe["emaBig"]))
+            #         & allSuperGreen
+            #         & ruleemaLiteLong
+            # )
+            # |
+            # (
+            #         True
+            #         & (qtpylib.crossed_above(dataframe["close"], dataframe["emaLite"]))
+            #         & allSuperGreen
+            #         & overemaBig
+            #         & overemaBigShifted
+            # )
+            ,
             "enter_long",
         ] = 1
 
+        belowemaBig = (dataframe["close"] < dataframe["emaBig"])
+        belowemaBigShifted = (dataframe["close"].shift(1) < dataframe["emaBig"].shift(1))
+        ruleemaLiteShort = (dataframe["close"] > dataframe["emaLite"])
+        allSuperRed = ((dataframe["SUPERTd_10_1.0"] == -1) & (dataframe["SUPERTd_11_2.0"] == -1) & (dataframe["SUPERTd_12_3.0"] == -1))
+        notAllShiftedSuperRed = ((dataframe["SUPERTd_10_1.0"].shift(1) == 1) | (dataframe["SUPERTd_11_2.0"].shift(1) == 1) | (dataframe["SUPERTd_12_3.0"].shift(1) == 1))
+
         dataframe.loc[
-            (dataframe[f"sell_ema_{self.sell_ema.value}"] > dataframe["close"])
-            & (dataframe[f"sell_ema_{self.buy_ema.value}"].shift(1) > dataframe["close"].shift(1))
-            & (dataframe["ema21"] > dataframe["close"])
-            & (dataframe["SUPERTd_10_1.0"] == -1)
-            & (dataframe["SUPERTd_11_2.0"] == -1)
-            & (dataframe["SUPERTd_12_3.0"] == -1)
-            & (dataframe["volume"] > 0),
-            "enter_short",
+            (
+                    True
+                    & belowemaBig
+                    & belowemaBigShifted
+                    # & ruleemaLiteShort
+                    & allSuperRed
+                    # & notAllShiftedSuperRed
+                    & volumeOn
+            )
+            # |
+            # (
+            #         True
+            #         & (qtpylib.crossed_below(dataframe["close"], dataframe["emaBig"]))
+            #         & allSuperRed
+            #     # & ruleemaLiteShort
+            # )
+            # |
+            # (
+            #         True
+            #         & (qtpylib.crossed_below(dataframe["close"], dataframe["emaLite"]))
+            #         & allSuperRed
+            #         & belowemaBig
+            #         & belowemaBigShifted
+            # )
+            ,
+            "enter_long",
         ] = 1
 
         return dataframe
@@ -204,68 +206,3 @@ class FSupertrendStrategy(IStrategy):
         ] = 1
 
         return dataframe
-
-    """
-        Supertrend Indicator; adapted for freqtrade
-        from: https://github.com/freqtrade/freqtrade-strategies/issues/30
-    """
-
-    def supertrend(self, dataframe: DataFrame, multiplier, period):
-        df = dataframe.copy()
-
-        df["TR"] = ta.TRANGE(df)
-        df["ATR"] = ta.SMA(df["TR"], period)
-
-        st = "ST_" + str(period) + "_" + str(multiplier)
-        stx = "STX_" + str(period) + "_" + str(multiplier)
-
-        # Compute basic upper and lower bands
-        df["basic_ub"] = (df["high"] + df["low"]) / 2 + multiplier * df["ATR"]
-        df["basic_lb"] = (df["high"] + df["low"]) / 2 - multiplier * df["ATR"]
-
-        # Compute final upper and lower bands
-        df["final_ub"] = 0.00
-        df["final_lb"] = 0.00
-        for i in range(period, len(df)):
-            df["final_ub"].iat[i] = (
-                df["basic_ub"].iat[i]
-                if df["basic_ub"].iat[i] < df["final_ub"].iat[i - 1]
-                   or df["close"].iat[i - 1] > df["final_ub"].iat[i - 1]
-                else df["final_ub"].iat[i - 1]
-            )
-            df["final_lb"].iat[i] = (
-                df["basic_lb"].iat[i]
-                if df["basic_lb"].iat[i] > df["final_lb"].iat[i - 1]
-                   or df["close"].iat[i - 1] < df["final_lb"].iat[i - 1]
-                else df["final_lb"].iat[i - 1]
-            )
-
-        # Set the Supertrend value
-        df[st] = 0.00
-        for i in range(period, len(df)):
-            df[st].iat[i] = (
-                df["final_ub"].iat[i]
-                if df[st].iat[i - 1] == df["final_ub"].iat[i - 1]
-                   and df["close"].iat[i] <= df["final_ub"].iat[i]
-                else df["final_lb"].iat[i]
-                if df[st].iat[i - 1] == df["final_ub"].iat[i - 1]
-                   and df["close"].iat[i] > df["final_ub"].iat[i]
-                else df["final_lb"].iat[i]
-                if df[st].iat[i - 1] == df["final_lb"].iat[i - 1]
-                   and df["close"].iat[i] >= df["final_lb"].iat[i]
-                else df["final_ub"].iat[i]
-                if df[st].iat[i - 1] == df["final_lb"].iat[i - 1]
-                   and df["close"].iat[i] < df["final_lb"].iat[i]
-                else 0.00
-            )
-        # Mark the trend direction up/down
-        df[stx] = np.where(
-            (df[st] > 0.00), np.where((df["close"] < df[st]), "down", "up"), np.NaN
-        )
-
-        # Remove basic and final bands from the columns
-        df.drop(["basic_ub", "basic_lb", "final_ub", "final_lb"], inplace=True, axis=1)
-
-        df.fillna(0, inplace=True)
-
-        return DataFrame(index=df.index, data={"ST": df[st], "STX": df[stx]})
