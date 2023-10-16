@@ -34,6 +34,8 @@
     "pair_whitelist": [
 //      "ALGO/USDT:USDT",
 //      "ONE/USDT:USDT",
+      "DENT/USDT:USDT",
+      "DYDX/USDT:USDT",
       "1INCH/USDT:USDT",
       "APT/USDT:USDT",
       "AUDIO/USDT:USDT",
@@ -57,7 +59,6 @@
       "OP/USDT:USDT",
       "PERP/USDT:USDT",
       "RUNE/USDT:USDT",
-      "SSV/USDT:USDT",
       "STG/USDT:USDT",
       "STX/USDT:USDT",
       "TRB/USDT:USDT",
