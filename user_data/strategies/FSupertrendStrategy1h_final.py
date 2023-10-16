@@ -162,112 +162,112 @@ class FSupertrendStrategy1h_final(IStrategy):
         return dataframe
 
 
-def populate_entry_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
-    dataframe.loc[
-        (dataframe["close"] > dataframe[f"buy_ema_{self.buy_ema.value}"])
-        & (dataframe["close"].shift(1) > dataframe[f"buy_ema_{self.buy_ema.value}"].shift(1))
-        # & (dataframe["close"] > dataframe["emaShort"])
-        & (dataframe["greens"] > 2)
+    def populate_entry_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+        dataframe.loc[
+            (dataframe["close"] > dataframe[f"buy_ema_{self.buy_ema.value}"])
+            & (dataframe["close"].shift(1) > dataframe[f"buy_ema_{self.buy_ema.value}"].shift(1))
+            # & (dataframe["close"] > dataframe["emaShort"])
+            & (dataframe["greens"] > 2)
 
-        # & (dataframe["plus_di"] > dataframe["plus_di"].shift(1))
-        # & (dataframe["minus_di"] < dataframe["minus_di"].shift(1))
-        # & (dataframe["adx"] > dataframe["adx"].shift(1))
+            # & (dataframe["plus_di"] > dataframe["plus_di"].shift(1))
+            # & (dataframe["minus_di"] < dataframe["minus_di"].shift(1))
+            # & (dataframe["adx"] > dataframe["adx"].shift(1))
 
-        & (qtpylib.crossed_above(dataframe['fastd_rsi'], dataframe['fastk_rsi']))
-        & (dataframe['fastd_rsi'] < 20)
+            & (qtpylib.crossed_above(dataframe['fastd_rsi'], dataframe['fastk_rsi']))
+            & (dataframe['fastd_rsi'] < 20)
 
-        & (dataframe["volume"] > 0),
-        "enter_long",
-    ] = 1
+            & (dataframe["volume"] > 0),
+            "enter_long",
+        ] = 1
 
-    dataframe.loc[
-        (dataframe["close"] < dataframe[f"sell_ema_{self.sell_ema.value}"])
-        & (dataframe["close"].shift(1) < dataframe[f"sell_ema_{self.buy_ema.value}"].shift(1))
-        # & (dataframe["close"] < dataframe["emaShort"])
-        & (dataframe["reds"] < -2)
+        dataframe.loc[
+            (dataframe["close"] < dataframe[f"sell_ema_{self.sell_ema.value}"])
+            & (dataframe["close"].shift(1) < dataframe[f"sell_ema_{self.buy_ema.value}"].shift(1))
+            # & (dataframe["close"] < dataframe["emaShort"])
+            & (dataframe["reds"] < -2)
 
-        # & (dataframe["plus_di"] < dataframe["plus_di"].shift(1))
-        # & (dataframe["minus_di"] > dataframe["minus_di"].shift(1))
-        # & (dataframe["adx"] > dataframe["adx"].shift(1))
+            # & (dataframe["plus_di"] < dataframe["plus_di"].shift(1))
+            # & (dataframe["minus_di"] > dataframe["minus_di"].shift(1))
+            # & (dataframe["adx"] > dataframe["adx"].shift(1))
 
-        & (qtpylib.crossed_below(dataframe['fastd_rsi'], dataframe['fastk_rsi']))
-        & (dataframe['fastd_rsi'] > 80)
+            & (qtpylib.crossed_below(dataframe['fastd_rsi'], dataframe['fastk_rsi']))
+            & (dataframe['fastd_rsi'] > 80)
 
-        & (dataframe["volume"] > 0),
-        "enter_short",
-    ] = 1
+            & (dataframe["volume"] > 0),
+            "enter_short",
+        ] = 1
 
-    return dataframe
-
-
-def populate_exit_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
-    dataframe.loc[
-        False
-        | (dataframe["reds"] < -1)
-        | (qtpylib.crossed_above(dataframe["adx"], dataframe["plus_di"]))
-        | (qtpylib.crossed_above(dataframe["minus_di"], dataframe["plus_di"]))
-        | (qtpylib.crossed_below(dataframe['close'], dataframe['emaShort']))
-        | (dataframe['close'] < dataframe['sloss'])
-        ,
-        "exit_long",
-    ] = 1
-
-    dataframe.loc[
-        False
-        | (dataframe["greens"] > 1)
-        | (qtpylib.crossed_below(dataframe["adx"], dataframe["minus_di"]))
-        | (qtpylib.crossed_above(dataframe["plus_di"], dataframe["minus_di"]))
-        | (qtpylib.crossed_below(dataframe['close'], dataframe['emaShort']))
-        | (dataframe['close'] > dataframe['sloss'])
-        ,
-        "exit_short",
-    ] = 1
-
-    return dataframe
+        return dataframe
 
 
-@property
-def protections(self):
-    return [
-        {
-            "method": "CooldownPeriod",
-            "stop_duration_candles": 5
-        },
-        # {
-        #     "method": "MaxDrawdown",
-        #     "lookback_period_candles": 48,
-        #     "trade_limit": 20,
-        #     "stop_duration_candles": 4,
-        #     "max_allowed_drawdown": 0.2
-        # },
-        # {
-        #     "method": "StoplossGuard",
-        #     "lookback_period_candles": 24,
-        #     "trade_limit": 4,
-        #     "stop_duration_candles": 2,
-        #     "only_per_pair": False
-        # },
-        # {
-        #     "method": "LowProfitPairs",
-        #     "lookback_period_candles": 6,
-        #     "trade_limit": 2,
-        #     "stop_duration_candles": 60,
-        #     "required_profit": 0.02
-        # },
-        # {
-        #     "method": "LowProfitPairs",
-        #     "lookback_period_candles": 24,
-        #     "trade_limit": 4,
-        #     "stop_duration_candles": 2,
-        #     "required_profit": 0.01
-        # }
-    ]
+    def populate_exit_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+        dataframe.loc[
+            False
+            | (dataframe["reds"] < -1)
+            | (qtpylib.crossed_above(dataframe["adx"], dataframe["plus_di"]))
+            | (qtpylib.crossed_above(dataframe["minus_di"], dataframe["plus_di"]))
+            | (qtpylib.crossed_below(dataframe['close'], dataframe['emaShort']))
+            | (dataframe['close'] < dataframe['sloss'])
+            ,
+            "exit_long",
+        ] = 1
+
+        dataframe.loc[
+            False
+            | (dataframe["greens"] > 1)
+            | (qtpylib.crossed_below(dataframe["adx"], dataframe["minus_di"]))
+            | (qtpylib.crossed_above(dataframe["plus_di"], dataframe["minus_di"]))
+            | (qtpylib.crossed_below(dataframe['close'], dataframe['emaShort']))
+            | (dataframe['close'] > dataframe['sloss'])
+            ,
+            "exit_short",
+        ] = 1
+
+        return dataframe
 
 
-def leverage(self, pair: str, current_time: datetime, current_rate: float,
-             proposed_leverage: float, max_leverage: float, entry_tag: Optional[str],
-             side: str, **kwargs) -> float:
-    entry_tag = ''
-    max_leverage = 1
+    @property
+    def protections(self):
+        return [
+            {
+                "method": "CooldownPeriod",
+                "stop_duration_candles": 5
+            },
+            # {
+            #     "method": "MaxDrawdown",
+            #     "lookback_period_candles": 48,
+            #     "trade_limit": 20,
+            #     "stop_duration_candles": 4,
+            #     "max_allowed_drawdown": 0.2
+            # },
+            # {
+            #     "method": "StoplossGuard",
+            #     "lookback_period_candles": 24,
+            #     "trade_limit": 4,
+            #     "stop_duration_candles": 2,
+            #     "only_per_pair": False
+            # },
+            # {
+            #     "method": "LowProfitPairs",
+            #     "lookback_period_candles": 6,
+            #     "trade_limit": 2,
+            #     "stop_duration_candles": 60,
+            #     "required_profit": 0.02
+            # },
+            # {
+            #     "method": "LowProfitPairs",
+            #     "lookback_period_candles": 24,
+            #     "trade_limit": 4,
+            #     "stop_duration_candles": 2,
+            #     "required_profit": 0.01
+            # }
+        ]
 
-    return max_leverage
+
+    def leverage(self, pair: str, current_time: datetime, current_rate: float,
+                 proposed_leverage: float, max_leverage: float, entry_tag: Optional[str],
+                 side: str, **kwargs) -> float:
+        entry_tag = ''
+        max_leverage = 1
+
+        return max_leverage
