@@ -13,6 +13,7 @@ Supertrend strategy:
 from datetime import datetime
 from typing import Optional
 
+import pandas_ta as ta
 import talib.abstract as ta
 from pandas import DataFrame
 
@@ -128,36 +129,12 @@ class FSupertrendStrategy1h_final(IStrategy):
         dataframe["minus_di"] = ta.MINUS_DI(dataframe)
         dataframe["emaShort"] = ta.EMA(dataframe, timeperiod=3)
 
-        stoch_rsi = ta.STOCHRSI(dataframe, n=28, fastk=3, fastd=3, fastd_matype=0)
+        stoch_rsi = ta.STOCHRSI(dataframe)
         dataframe['fastd_rsi'] = stoch_rsi['fastd']
         dataframe['fastk_rsi'] = stoch_rsi['fastk']
 
         dataframe['greens'] = dataframe['SUPERTd_10_1.0'] + dataframe['SUPERTd_11_2.0'] + dataframe['SUPERTd_12_3.0']
         dataframe['reds'] = dataframe['SUPERTd_10_1.0'] + dataframe['SUPERTd_11_2.0'] + dataframe['SUPERTd_12_3.0']
-
-        for i in range(1, len(dataframe)):
-            if dataframe.loc[i, 'fastd_rsi'] > dataframe.loc[i, 'fastk_rsi'] and dataframe.loc[i - 1, 'fastd_rsi'] <= \
-                    dataframe.loc[i - 1, 'fastk_rsi']:
-                dataframe.loc[i, 'cross_above'] = 1
-
-        for i in range(1, len(dataframe)):
-            if dataframe.loc[i, 'fastk_rsi'] > dataframe.loc[i, 'fastd_rsi'] and dataframe.loc[i - 1, 'fastk_rsi'] <= \
-                    dataframe.loc[i - 1, 'fastd_rsi']:
-                dataframe.loc[i, 'cross_below'] = 1
-
-        previous_result = None
-        new_results = []
-        for index, row in dataframe.iterrows():
-            current_result = row['SUPERT_11_2.0'] \
-                if (row['greens'] > 1 and row['cross_above']) or (row['reds'] < -1 and row['cross_below'] == 1) \
-                else previous_result
-            new_results.append(current_result)
-            previous_result = current_result
-
-        dataframe['sloss'] = new_results
-
-        if not metadata['pair'] in self.custom_info:
-            self.custom_info[metadata['pair']] = {}
 
         return dataframe
 
@@ -207,7 +184,6 @@ class FSupertrendStrategy1h_final(IStrategy):
             | (qtpylib.crossed_above(dataframe["adx"], dataframe["plus_di"]))
             | (qtpylib.crossed_above(dataframe["minus_di"], dataframe["plus_di"]))
             | (qtpylib.crossed_below(dataframe['close'], dataframe['emaShort']))
-            | (dataframe['close'] < dataframe['sloss'])
             ,
             "exit_long",
         ] = 1
@@ -218,7 +194,6 @@ class FSupertrendStrategy1h_final(IStrategy):
             | (qtpylib.crossed_below(dataframe["adx"], dataframe["minus_di"]))
             | (qtpylib.crossed_above(dataframe["plus_di"], dataframe["minus_di"]))
             | (qtpylib.crossed_below(dataframe['close'], dataframe['emaShort']))
-            | (dataframe['close'] > dataframe['sloss'])
             ,
             "exit_short",
         ] = 1
@@ -268,6 +243,7 @@ class FSupertrendStrategy1h_final(IStrategy):
                  proposed_leverage: float, max_leverage: float, entry_tag: Optional[str],
                  side: str, **kwargs) -> float:
         entry_tag = ''
-        max_leverage = 1
+        max_leverage = 5
+
 
         return max_leverage
