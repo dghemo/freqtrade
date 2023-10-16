@@ -99,7 +99,7 @@ class FSupertrendStrategy1h_final(IStrategy):
             'SUPERT_12_3.0': {'color': 'cyan'},
             'sell_ema_200': {'color': 'blue'},
             'emaShort': {'color': 'white'},
-
+            'sloss': {'color': 'red'}
         },
         'subplots': {
             'DMI': {
