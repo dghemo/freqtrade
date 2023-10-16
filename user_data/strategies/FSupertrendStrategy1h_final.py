@@ -139,7 +139,7 @@ class FSupertrendStrategy1h_final(IStrategy):
         dataframe['reds'] = dataframe['SUPERTd_10_1.0'] + dataframe['SUPERTd_11_2.0'] + dataframe['SUPERTd_12_3.0']
 
         dataframe['sloss'] = 0
-        dataframe['sloss'] = np.where((dataframe['greens'] > 1) | (dataframe['reds'] < -1), dataframe['SUPERT_11_2.0'], dataframe['sloss'].shift(1, fill_value=0))
+        dataframe['sloss'] = np.where((dataframe['greens'] > 1) | (dataframe['reds'] < -1), dataframe['SUPERT_11_2.0'], dataframe['sloss'].shift(1, fill_value=dataframe['SUPERT_12_3.0']))
 
 
         return dataframe
@@ -150,7 +150,7 @@ class FSupertrendStrategy1h_final(IStrategy):
             (dataframe["close"] > dataframe[f"buy_ema_{self.buy_ema.value}"])
             & (dataframe["close"].shift(1) > dataframe[f"buy_ema_{self.buy_ema.value}"].shift(1))
             # & (dataframe["close"] > dataframe["emaShort"])
-            & (dataframe["greens"] > 0)
+            & (dataframe["greens"] > 2)
 
             # & (dataframe["plus_di"] > dataframe["plus_di"].shift(1))
             # & (dataframe["minus_di"] < dataframe["minus_di"].shift(1))
@@ -167,7 +167,7 @@ class FSupertrendStrategy1h_final(IStrategy):
             (dataframe["close"] < dataframe[f"sell_ema_{self.sell_ema.value}"])
             & (dataframe["close"].shift(1) < dataframe[f"sell_ema_{self.buy_ema.value}"].shift(1))
             # & (dataframe["close"] < dataframe["emaShort"])
-            & (dataframe["reds"] < 0)
+            & (dataframe["reds"] < -2)
 
             # & (dataframe["plus_di"] < dataframe["plus_di"].shift(1))
             # & (dataframe["minus_di"] > dataframe["minus_di"].shift(1))
