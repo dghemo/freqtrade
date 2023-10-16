@@ -11,18 +11,16 @@ Supertrend strategy:
             2. The implementation for `supertrend` on this strategy is not validated; meaning this that is not proven to match the results by the paper where it was originally introduced or any other trusted academic resources
 """
 
-import logging
 from datetime import datetime
 from typing import Optional
 
-from numpy.lib import math
-from freqtrade.strategy import IStrategy, IntParameter
-from pandas import DataFrame
-import pandas_ta as ta
 import numpy as np
-
+import pandas_ta as ta
 import talib.abstract as ta
+from pandas import DataFrame
+
 import freqtrade.vendor.qtpylib.indicators as qtpylib
+from freqtrade.strategy import IStrategy, IntParameter
 
 
 class FSupertrendStrategy1h_final(IStrategy):
@@ -139,8 +137,11 @@ class FSupertrendStrategy1h_final(IStrategy):
         dataframe['reds'] = dataframe['SUPERTd_10_1.0'] + dataframe['SUPERTd_11_2.0'] + dataframe['SUPERTd_12_3.0']
 
         dataframe['sloss'] = None
-        dataframe['sloss'] = np.where((dataframe['greens'] > 1) | (dataframe['reds'] < -1), dataframe['SUPERT_11_2.0'], dataframe['sloss'].shift(1))
-
+        dataframe['sloss'] = np.where(
+            ((dataframe['greens'] > 1 & qtpylib.crossed_above(dataframe['fastd_rsi'], dataframe['fastk_rsi']))
+             | (dataframe['reds'] < -1 & qtpylib.crossed_below(dataframe['fastd_rsi'], dataframe['fastk_rsi']))),
+            dataframe['SUPERT_11_2.0'], dataframe['sloss'].shift(1)
+        )
 
         return dataframe
 
@@ -250,6 +251,5 @@ class FSupertrendStrategy1h_final(IStrategy):
 
         entry_tag = ''
         max_leverage = 1
-
 
         return max_leverage
