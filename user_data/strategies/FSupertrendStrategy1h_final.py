@@ -138,8 +138,8 @@ class FSupertrendStrategy1h_final(IStrategy):
         dataframe['greens'] = dataframe['SUPERTd_10_1.0'] + dataframe['SUPERTd_11_2.0'] + dataframe['SUPERTd_12_3.0']
         dataframe['reds'] = dataframe['SUPERTd_10_1.0'] + dataframe['SUPERTd_11_2.0'] + dataframe['SUPERTd_12_3.0']
 
-        dataframe['sloss'] = 0
-        dataframe['sloss'] = np.where((dataframe['greens'] > 1) | (dataframe['reds'] < -1), dataframe['SUPERT_11_2.0'], dataframe['sloss'].shift(1, fill_value=dataframe['SUPERT_12_3.0']))
+        dataframe['sloss'] = None
+        dataframe['sloss'] = np.where((dataframe['greens'] > 1) | (dataframe['reds'] < -1), dataframe['SUPERT_11_2.0'], dataframe['sloss'].shift(1))
 
 
         return dataframe
