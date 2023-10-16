@@ -128,7 +128,7 @@ class FSupertrendStrategy1h_final(IStrategy):
         dataframe["minus_di"] = ta.MINUS_DI(dataframe)
         dataframe["emaShort"] = ta.EMA(dataframe, timeperiod=3)
 
-        stoch_rsi = ta.STOCHRSI(dataframe)
+        stoch_rsi = ta.STOCHRSI(dataframe, n=14, fastk=3, fastd=3, fastd_matype=0)
         dataframe['fastd_rsi'] = stoch_rsi['fastd']
         dataframe['fastk_rsi'] = stoch_rsi['fastk']
 
