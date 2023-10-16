@@ -148,7 +148,7 @@ class FSupertrendStrategy1h_final(IStrategy):
         previous_result = None
         new_results = []
         for index, row in dataframe.iterrows():
-            current_result = row['SUPERTd_11_2.0'] \
+            current_result = row['SUPERT_11_2.0'] \
                 if (row['greens'] > 1 and row['cross_above']) or (row['reds'] < -1 and row['cross_below'] == 1) \
                 else previous_result
             new_results.append(current_result)
