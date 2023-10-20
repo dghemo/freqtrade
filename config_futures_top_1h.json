@@ -130,15 +130,15 @@
   },
   "api_server": {
     "enabled": true,
-    "listen_ip_address": "localhost",
-    //    "listen_ip_address": "192.168.1.181",
-    "listen_port": 8081,
+    //    "listen_ip_address": "localhost",
+    "listen_ip_address": "192.168.1.3",
+    "listen_port": 8080,
     "verbosity": "error",
     "enable_openapi": false,
     "jwt_secret_key": "5c435a5BB1368ada02ea5ed59ec5ed67baa315db70dcbbe21dd978d4ff065e21",
     "ws_token": "xD2q6gvwQLcVlfB0CDokHFvJsyttrb3w6Q",
     "CORS_origins": [
-      "http://192.168.1.181:8080"
+      "http://192.168.1.3:8080"
     ],
     "username": "freqtrader",
     "password": "k8bnndl"
