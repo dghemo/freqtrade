@@ -116,3 +116,4 @@ target/
 !config_examples/config_freqai.example.json
 /config_binance_secret.json
 /config_telegram1.json
+/config_futures_top_1h_test.json
