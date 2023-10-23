@@ -69,7 +69,7 @@ class FSupertrendStrategy5m_final(IStrategy):
     trailing_stop_positive_offset = 0.005
     trailing_only_offset_is_reached = True
 
-    timeframe = "5m"
+    timeframe = "15m"
 
     startup_candle_count = 200
 
@@ -138,14 +138,16 @@ class FSupertrendStrategy5m_final(IStrategy):
 
         return dataframe
 
-
     def populate_entry_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         dataframe.loc[
             (dataframe["close"] > dataframe[f"buy_ema_{self.buy_ema.value}"])
-            & (dataframe["close"].shift(1) > dataframe[f"buy_ema_{self.buy_ema.value}"].shift(1))
+            # & (dataframe["close"].shift(1) > dataframe[f"buy_ema_{self.buy_ema.value}"].shift(1))
             # & (dataframe["close"] > dataframe["emaShort"])
             & (dataframe["greens"] == 3)
-            & (dataframe["greens"].shift(1) == 2)
+            & (qtpylib.crossed_above(dataframe["close"], dataframe['SUPERT_10_1.0'])
+               | qtpylib.crossed_above(dataframe["close"], dataframe['SUPERT_11_2.0'])
+               | qtpylib.crossed_above(dataframe["close"], dataframe['SUPERT_12_3.0'])
+               )
 
             # & (dataframe["plus_di"] > dataframe["plus_di"].shift(1))
             # & (dataframe["minus_di"] < dataframe["minus_di"].shift(1))
@@ -160,10 +162,13 @@ class FSupertrendStrategy5m_final(IStrategy):
 
         dataframe.loc[
             (dataframe["close"] < dataframe[f"sell_ema_{self.sell_ema.value}"])
-            & (dataframe["close"].shift(1) < dataframe[f"sell_ema_{self.buy_ema.value}"].shift(1))
+            # & (dataframe["close"].shift(1) < dataframe[f"sell_ema_{self.buy_ema.value}"].shift(1))
             # & (dataframe["close"] < dataframe["emaShort"])
             & (dataframe["reds"] == -3)
-            & (dataframe["reds"].shift(1) == -2)
+            & (qtpylib.crossed_below(dataframe["close"], dataframe['SUPERT_10_1.0'])
+               | qtpylib.crossed_below(dataframe["close"], dataframe['SUPERT_11_2.0'])
+               | qtpylib.crossed_below(dataframe["close"], dataframe['SUPERT_12_3.0'])
+               )
 
             # & (dataframe["plus_di"] < dataframe["plus_di"].shift(1))
             # & (dataframe["minus_di"] > dataframe["minus_di"].shift(1))
@@ -177,7 +182,6 @@ class FSupertrendStrategy5m_final(IStrategy):
         ] = 1
 
         return dataframe
-
 
     def populate_exit_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         dataframe.loc[
@@ -201,7 +205,6 @@ class FSupertrendStrategy5m_final(IStrategy):
         ] = 1
 
         return dataframe
-
 
     @property
     def protections(self):
@@ -240,12 +243,10 @@ class FSupertrendStrategy5m_final(IStrategy):
             # }
         ]
 
-
     def leverage(self, pair: str, current_time: datetime, current_rate: float,
                  proposed_leverage: float, max_leverage: float, entry_tag: Optional[str],
                  side: str, **kwargs) -> float:
         entry_tag = ''
         max_leverage = 1
-
 
         return max_leverage
