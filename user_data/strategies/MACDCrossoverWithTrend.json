@@ -1,0 +1,28 @@
+{
+  "strategy_name": "MACDCrossoverWithTrend",
+  "params": {
+    "max_open_trades": {
+      "max_open_trades": 2
+    },
+    "buy": {},
+    "sell": {},
+    "protection": {},
+    "roi": {
+      "0": 0.121,
+      "75": 0.046,
+      "211": 0.026,
+      "559": 0
+    },
+    "stoploss": {
+      "stoploss": -0.031
+    },
+    "trailing": {
+      "trailing_stop": true,
+      "trailing_stop_positive": 0.085,
+      "trailing_stop_positive_offset": 0.11000000000000001,
+      "trailing_only_offset_is_reached": true
+    }
+  },
+  "ft_stratparam_v": 1,
+  "export_time": "2023-11-10 14:09:37.416981+00:00"
+}
